@@ -44,9 +44,11 @@ class JournalController extends Controller
         //
     }
 
-    public function show(Journal $journal): void
+    public function show(Journal $journal)
     {
-        //
+        return view('journal.show', [
+            'journal' => $journal
+        ]);
     }
 
     public function edit(Journal $journal): void
@@ -59,8 +61,10 @@ class JournalController extends Controller
         //
     }
 
-    public function destroy(Journal $journal): void
+    public function destroy(Journal $journal)
     {
-        //
+        $journal->delete();
+
+        return to_route('journal.index');
     }
 }

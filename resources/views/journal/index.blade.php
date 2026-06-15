@@ -6,8 +6,17 @@
             <p class="text-muted-foreground text-sm mt-2">
                 Start journaling your day
             </p>
-        </header>
 
+            <x-card 
+             x-data
+             @click="$dispatch('open-modal', 'create-journal')"
+             as="button"
+             type="button"
+             class="mt-10 cursor-pointer h-32 w-full text-4xl font-bold text-left">
+                Create a journal
+            </x-card>
+
+        </header>
         <div>
             <a href='/journal' class="btn {{ request()->has('mood') ? 'btn-outlined' : ''}}">
             All
@@ -26,7 +35,7 @@
 
 
         <div class="mt-10 text-muted-foreground">
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-3 gap-6 mb-10">
             @forelse ( $journals as $journal )
                 <x-card href="{{ route('journal.show', $journal) }}">
                     <h1 class="text-foreground text-lg">{{$journal->title}}</h1>
@@ -45,5 +54,9 @@
             @endforelse
         </div>
     </div>
+
+    <x-modal name="create-journal" title="Create a new journal"/>
+    
+
  </div>
 </x-layout.app>
