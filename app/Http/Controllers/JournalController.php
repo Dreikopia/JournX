@@ -6,61 +6,59 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreJournalRequest;
 use App\Http\Requests\UpdateJournalRequest;
+use App\JournalMood;
 use App\Models\Journal;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JournalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): void
+    public function index(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $mood = $request->mood;
+
+        if (! in_array($mood, JournalMood::values())) {
+            $mood = null;
+        }
+
+        $journals = $user->
+                    journals()->
+                    when($mood, fn ($query, $mood) => $query->where('mood', $mood))->
+                    get();
+
+        return view('journal.index', [
+            'journals' => $journals,
+            'moodCounts' => Journal::moodCounts($user),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): void
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreJournalRequest $request): void
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Journal $journal): void
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Journal $journal): void
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateJournalRequest $request, Journal $journal): void
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Journal $journal): void
     {
         //

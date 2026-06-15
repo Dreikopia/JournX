@@ -13,9 +13,14 @@ enum JournalMood: string
     public function label(): string
     {
         return match ($this) {
-            self::NEUTRAL => 'neutral',
-            self::GOOD => 'good',
-            self::BAD => 'bad',
+            self::NEUTRAL => 'Neutral',
+            self::GOOD => 'Good',
+            self::BAD => 'Bad',
         };
+    }
+
+    public static function values(): array
+    {
+        return array_map(fn (JournalMood $mood) => $mood->value, self::cases());
     }
 }

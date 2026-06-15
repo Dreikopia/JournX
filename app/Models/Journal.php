@@ -19,12 +19,26 @@ class Journal extends Model
     ];
 
     protected $attributes = [
-        'mood' => JournalMood::NEUTRAL,
+        'mood' => JournalMood::NEUTRAL->value,
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class); // each journal belongs to each user
+    }
+
+    public static function moodCounts(User $user)
+    {
+        $counts = $user->journals()
+            ->selectRaw('mood, count(*) as count')
+            ->groupBy('mood')
+            ->pluck('count', 'mood');
+
+        return collect(JournalMood::cases())
+            ->mapWithKeys(fn ($mood) => [
+                $mood->value => $counts->get($mood->value, 0),
+            ])
+            ->put('all', $user->journals()->count());
     }
 
     public function tasks()
