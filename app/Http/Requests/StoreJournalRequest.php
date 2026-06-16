@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\JournalMood;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreJournalRequest extends FormRequest
 {
@@ -14,7 +16,7 @@ class StoreJournalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +27,9 @@ class StoreJournalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['nullable', 'string'],
+            'mood' => ['required', Rule::enum(JournalMood::class)],
+            'description' => ['required', 'string'],
         ];
     }
 }

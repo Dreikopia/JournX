@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 test('can register a user', function () {
     visit('/register')
-        ->fill('username', 'GigaNigga')
-        ->fill('email', 'giga@gmail.com')
-        ->fill('password', 'GigaNigga123')
+        ->fill('username', 'testing')
+        ->fill('email', 'test@gmail.com')
+        ->fill('password', 'testing123')
         ->click('Create account')
         ->assertPathIs('/');
 });

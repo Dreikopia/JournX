@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/journal');
 
-Route::get('/journal', [JournalController::class, 'index'])->name('journal.index')->middleware('auth');
-
-Route::get('/journal/{journal}', [JournalController::class, 'show'])->name('journal.show')->middleware('auth');
-
-Route::delete('/journal/{journal}', [JournalController::class, 'destroy'])->name('journal.destroy')->middleware('auth');
+Route::middleware('auth')->group(
+    function () {
+        Route::get('/journal', [JournalController::class, 'index'])->name('journal.index');
+        Route::post('/journal', [JournalController::class, 'store'])->name('journal.store');
+        Route::get('/journal/{journal}', [JournalController::class, 'show'])->name('journal.show');
+        Route::delete('/journal/{journal}', [JournalController::class, 'destroy'])->name('journal.destroy');
+    }
+);
 
 Route::middleware('guest')->group(function () {
 

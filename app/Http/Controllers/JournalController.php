@@ -23,10 +23,9 @@ class JournalController extends Controller
             $mood = null;
         }
 
-        $journals = $user->
-                    journals()->
-                    when($mood, fn ($query, $mood) => $query->where('mood', $mood))->
-                    get();
+        $journals = $user->journals()->when($mood, fn ($query, $mood) => $query->where('mood', $mood))
+            ->latest()
+            ->get();
 
         return view('journal.index', [
             'journals' => $journals,
@@ -39,15 +38,21 @@ class JournalController extends Controller
         //
     }
 
-    public function store(StoreJournalRequest $request): void
+    public function store(StoreJournalRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+
+        Auth::user()->journals()->create($validated);
+
+        return to_route('journal.index')
+            ->with('success', 'Journal Created');
     }
 
     public function show(Journal $journal)
     {
         return view('journal.show', [
-            'journal' => $journal
+            'journal' => $journal,
         ]);
     }
 
