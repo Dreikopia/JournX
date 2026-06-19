@@ -35,7 +35,7 @@ class Journal extends Model
             ->pluck('count', 'mood');
 
         return collect(JournalMood::cases())
-            ->mapWithKeys(fn ($mood) => [
+            ->mapWithKeys(fn($mood) => [
                 $mood->value => $counts->get($mood->value, 0),
             ])
             ->put('all', $user->journals()->count());

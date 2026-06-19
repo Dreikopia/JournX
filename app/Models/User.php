@@ -33,7 +33,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
     public function journals()
     {
         return $this->hasMany(Journal::class); // user can have many journals

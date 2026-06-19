@@ -27,6 +27,7 @@ class RegisteredUserController extends Controller
 
         $user = User::create($validated);
 
+        $request->session()->regenerate();
         Auth::login($user);
 
         return redirect('/')->with('success', 'Registration complete');

@@ -5,18 +5,10 @@ declare(strict_types=1);
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/journal');
-
-Route::middleware('auth')->group(
-    function () {
-        Route::get('/journal', [JournalController::class, 'index'])->name('journal.index');
-        Route::post('/journal', [JournalController::class, 'store'])->name('journal.store');
-        Route::get('/journal/{journal}', [JournalController::class, 'show'])->name('journal.show');
-        Route::delete('/journal/{journal}', [JournalController::class, 'destroy'])->name('journal.destroy');
-    }
-);
 
 Route::middleware('guest')->group(function () {
 
@@ -26,5 +18,15 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
 });
-
 Route::post('/logout', [SessionController::class, 'destroy']);
+
+Route::middleware('auth')->group(
+    function () {
+        Route::get('/journal', [JournalController::class, 'index'])->name('journal.index');
+        Route::post('/journal', [JournalController::class, 'store'])->name('journal.store');
+        Route::get('/journal/{journal}', [JournalController::class, 'show'])->name('journal.show');
+        Route::delete('/journal/{journal}', [JournalController::class, 'destroy'])->name('journal.destroy');
+
+        Route::patch('/tasks/{task}', [TaskController::class, 'update'])->name('task.update');
+    }
+);

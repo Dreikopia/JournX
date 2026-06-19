@@ -11,6 +11,8 @@ it('can create a journal', function () {
         ->fill('title', 'Example title')
         ->fill('description', 'Example description')
         ->click('@button-mood-good')
+        ->fill('@new-link', 'http://nigga.com')
+        ->click('@submit-new-link-button')
         ->click('Create')
         ->assertPathIs('/journal');
 
@@ -18,5 +20,6 @@ it('can create a journal', function () {
         'title' => 'Example title',
         'description' => 'Example description',
         'mood' => 'good',
+        'links' => ['http://nigga.com'],
     ]);
 });

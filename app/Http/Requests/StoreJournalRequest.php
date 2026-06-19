@@ -30,6 +30,11 @@ class StoreJournalRequest extends FormRequest
             'title' => ['nullable', 'string'],
             'mood' => ['required', Rule::enum(JournalMood::class)],
             'description' => ['required', 'string'],
+            'links' => ['nullable', 'array'],
+            'links.*' => ['url', 'max:255'],
+            'tasks' => ['nullable', 'array'],
+            'tasks.*' => ['string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:5120000']
         ];
     }
 }

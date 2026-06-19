@@ -23,7 +23,7 @@ class JournalController extends Controller
             $mood = null;
         }
 
-        $journals = $user->journals()->when($mood, fn ($query, $mood) => $query->where('mood', $mood))
+        $journals = $user->journals()->when($mood, fn($query, $mood) => $query->where('mood', $mood))
             ->latest()
             ->get();
 
@@ -40,10 +40,17 @@ class JournalController extends Controller
 
     public function store(StoreJournalRequest $request)
     {
+        $journal = Auth::user()->journals()->create($request->safe()->except('tasks', 'image'));
 
-        $validated = $request->validated();
+        $journal->tasks()->createMany(
+            collect($request->tasks ?? [])->map(fn($task) => ['description' => $task])
+        );
 
-        Auth::user()->journals()->create($validated);
+        $image_path = $request->image->store('journals', 'public');
+
+        $journal->update([
+            'image_path' => $image_path
+        ]);
 
         return to_route('journal.index')
             ->with('success', 'Journal Created');
@@ -51,6 +58,7 @@ class JournalController extends Controller
 
     public function show(Journal $journal)
     {
+        //Authorization
         return view('journal.show', [
             'journal' => $journal,
         ]);
@@ -68,7 +76,9 @@ class JournalController extends Controller
 
     public function destroy(Journal $journal)
     {
-        $journal->delete();
+
+        //Authorization
+        $journal->delete($journal);
 
         return to_route('journal.index');
     }
