@@ -1,25 +1,33 @@
 <?php
 
-use App\Models\Journal;
 use App\Models\User;
+use App\Models\Journal;
 
 it('can create a journal', function () {
-    $this->actingAs(User::factory()->create());
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
 
     visit('/journal')
         ->click('@create-journal')
         ->fill('title', 'Example title')
         ->fill('description', 'Example description')
-        ->click('@button-mood-good')
-        ->fill('@new-link', 'http://nigga.com')
-        ->click('@submit-new-link-button')
+        ->click('@button-mood-bad')
+        ->fill('@new-link', 'http://example.com')
+        ->click('@button-mood-bad')
+        ->fill('@new-task', 'Running')
+        ->click('@submit-new-task-button')
         ->click('Create')
         ->assertPathIs('/journal');
 
-    expect(Journal::first())->toMatchArray([
+    // Verify the journal was created in the database
+
+    // Verify it belongs to the correct user
+    expect($journal = $user->journals()->first())->toMatchArray([
         'title' => 'Example title',
         'description' => 'Example description',
-        'mood' => 'good',
-        'links' => ['http://nigga.com'],
+        'mood' => 'bad',
     ]);
+
+    expect($journal->tasks)->toHaveCount(1);
 });

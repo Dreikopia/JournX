@@ -10,6 +10,8 @@ use App\JournalMood;
 use App\Models\Journal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Actions\CreateJournal;
+use Illuminate\Support\Facades\Gate;
 
 class JournalController extends Controller
 {
@@ -38,19 +40,10 @@ class JournalController extends Controller
         //
     }
 
-    public function store(StoreJournalRequest $request)
+    public function store(StoreJournalRequest $request, CreateJournal $action)
     {
-        $journal = Auth::user()->journals()->create($request->safe()->except('tasks', 'image'));
 
-        $journal->tasks()->createMany(
-            collect($request->tasks ?? [])->map(fn($task) => ['description' => $task])
-        );
-
-        $image_path = $request->image->store('journals', 'public');
-
-        $journal->update([
-            'image_path' => $image_path
-        ]);
+        $action->handle($request->safe()->all());
 
         return to_route('journal.index')
             ->with('success', 'Journal Created');
@@ -58,6 +51,7 @@ class JournalController extends Controller
 
     public function show(Journal $journal)
     {
+        Gate::authorize('modify', $journal); // authorization policy
         //Authorization
         return view('journal.show', [
             'journal' => $journal,
@@ -66,18 +60,18 @@ class JournalController extends Controller
 
     public function edit(Journal $journal): void
     {
-        //
+        Gate::authorize('modify', $journal);
     }
 
     public function update(UpdateJournalRequest $request, Journal $journal): void
     {
-        //
+        Gate::authorize('modify', $journal);
     }
 
     public function destroy(Journal $journal)
     {
+        Gate::authorize('modify', $journal);
 
-        //Authorization
         $journal->delete($journal);
 
         return to_route('journal.index');

@@ -29,7 +29,7 @@
         </div>
 
         <div class="text-muted-foreground mt-10">
-            <div class="mb-10 grid gap-6 md:grid-cols-2">
+            <div class="mb-10 grid gap-6 md:grid-cols-3">
                 @forelse ($journals as $journal)
                     <x-card href="{{ route('journal.show', $journal) }}">
                         @if ($journal->image_path)
@@ -67,9 +67,10 @@
                 newLink: '',
                 links: [],
                 newTask: '',
-                tasks: []
+                tasks: [],
+                hasImage: false
             }" method="POST" action="{{ route('journal.store') }}"
-                enctype="multipart/form-data">
+                x-bind:enctype="hasImage ? 'multipart/form-data' : false">
                 @csrf
 
                 <div>
@@ -98,7 +99,8 @@
                     <div class="space-y-2 mb-2">
                         <label for="image" class="label">Featured Images</label>
 
-                        <input type="file" name="image" accept="image/*">
+                        <input type="file" name="image" accept="image/*"
+                            @change="hasImage = $event.target.files.length > 0">
                         <x-form.error name="image" />
                     </div>
 
@@ -158,7 +160,7 @@
 
                 <div class="mt-4 flex justify-end gap-x-3">
                     <button type="button" class="btn btn-outlined" @click="$dispatch('close-modal')">Cancel</button>
-                    <button type="submit" class="btn">Create</button>
+                    <button type="submit" class="btn" data-test="create-btn">Create</button>
                 </div>
             </form>
         </x-modal>
