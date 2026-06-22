@@ -6,14 +6,16 @@
                 <img src="{{ asset('images/JournX.logo.png') }}" width="150" alt="logo">            </a>
         </div>
 
-      
-
         @auth
         <div>
-        
             <h1>{{ ucfirst(Auth::user()->username) }}</h1>
         </div>
         <div class="flex gap-x-5 items-center font-bold">
+
+            <a href="{{ route('profile.edit') }}"> 
+                Edit Profile
+            </a>
+            
             <form method="POST" action="/logout">
             @csrf
                 <button type="submit" class="btn bg-red-500 font-bold hover:bg-red-800">

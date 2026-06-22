@@ -36,6 +36,7 @@ class SessionController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
+
         return redirect()->intended('/')->with('success', 'Welcome back '.ucfirst((string) Auth::user()->username));
 
     }

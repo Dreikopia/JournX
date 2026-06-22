@@ -16,12 +16,10 @@ use Tests\TestCase;
 |
 */
 
-pest()->extend(TestCase::class)
-    // ->use(DatabaseTransactions::class)
+pest()
+    ->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Browser', 'Unit');
-
-// But in specific test files that need it:
-uses(RefreshDatabase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +32,7 @@ uses(RefreshDatabase::class)->in('Feature');
 |
 */
 
-expect()->extend('toBeOne', fn() => $this->toBe(1));
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------

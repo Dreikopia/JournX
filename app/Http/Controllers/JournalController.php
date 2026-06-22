@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreJournalRequest;
-use App\Http\Requests\UpdateJournalRequest;
+use App\Actions\CreateJournal;
+use App\Actions\UpdateJournal;
+use App\Http\Requests\JournalRequest;
 use App\JournalMood;
 use App\Models\Journal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\CreateJournal;
 use Illuminate\Support\Facades\Gate;
 
 class JournalController extends Controller
@@ -25,7 +25,7 @@ class JournalController extends Controller
             $mood = null;
         }
 
-        $journals = $user->journals()->when($mood, fn($query, $mood) => $query->where('mood', $mood))
+        $journals = $user->journals()->when($mood, fn ($query, $mood) => $query->where('mood', $mood))
             ->latest()
             ->get();
 
@@ -40,7 +40,7 @@ class JournalController extends Controller
         //
     }
 
-    public function store(StoreJournalRequest $request, CreateJournal $action)
+    public function store(JournalRequest $request, CreateJournal $action)
     {
 
         $action->handle($request->safe()->all());
@@ -52,7 +52,8 @@ class JournalController extends Controller
     public function show(Journal $journal)
     {
         Gate::authorize('modify', $journal); // authorization policy
-        //Authorization
+
+        // Authorization
         return view('journal.show', [
             'journal' => $journal,
         ]);
@@ -63,16 +64,20 @@ class JournalController extends Controller
         Gate::authorize('modify', $journal);
     }
 
-    public function update(UpdateJournalRequest $request, Journal $journal): void
+    public function update(JournalRequest $request, Journal $journal, UpdateJournal $action)
     {
         Gate::authorize('modify', $journal);
+
+        $action->handle($request->safe()->all(), $journal);
+
+        return back()->with('success', 'journal updated');
     }
 
     public function destroy(Journal $journal)
     {
         Gate::authorize('modify', $journal);
 
-        $journal->delete($journal);
+        $journal->delete();
 
         return to_route('journal.index');
     }

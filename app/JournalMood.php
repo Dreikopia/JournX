@@ -21,6 +21,6 @@ enum JournalMood: string
 
     public static function values(): array
     {
-        return array_map(fn(JournalMood $mood) => $mood->value, self::cases());
+        return array_map(fn (JournalMood $mood) => $mood->value, self::cases());
     }
 }

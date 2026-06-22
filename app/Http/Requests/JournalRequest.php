@@ -9,7 +9,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreJournalRequest extends FormRequest
+class JournalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,8 +33,9 @@ class StoreJournalRequest extends FormRequest
             'links' => ['nullable', 'array'],
             'links.*' => ['url', 'max:255'],
             'tasks' => ['nullable', 'array'],
-            'tasks.*' => ['string', 'max:255'],
-            'image' => ['nullable', 'image', 'max:5120000']
+            'tasks.*.description' => ['string', 'max:255'],
+            'tasks.*.completed' => ['boolean'],
+            'image' => ['nullable', 'image', 'max:5120000'],
         ];
     }
 }

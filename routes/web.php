@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\JournalImageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +27,14 @@ Route::middleware('auth')->group(
         Route::get('/journal', [JournalController::class, 'index'])->name('journal.index');
         Route::post('/journal', [JournalController::class, 'store'])->name('journal.store');
         Route::get('/journal/{journal}', [JournalController::class, 'show'])->name('journal.show');
+        Route::patch('/journal/{journal}', [JournalController::class, 'update'])->name('journal.update');
         Route::delete('/journal/{journal}', [JournalController::class, 'destroy'])->name('journal.destroy');
+
+        Route::delete('/journal/{journal}/image', [JournalImageController::class, 'destroy'])->name('journal.image.destroy');
 
         Route::patch('/tasks/{task}', [TaskController::class, 'update'])->name('task.update');
     }
 );
+
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');

@@ -1,14 +1,26 @@
 @props(['name', 'title'])
 
-<div x-data="{ show: false, name: @js($name) }" x-effect="document.body.style.overflow = show ? 'hidden' : ''" x-show="show" x-trap="show"
-    @close-modal="show = false" @open-modal.window="show = ($event.detail === name)" @keydown.escape.window="show = false"
-    x-transition:enter="ease-out duration-250" x-transition:enter-start="opacity-0 -translate-y-4"
-    x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-250" x-transition:leave-start="opacity-100"
+<div x-data="{ show: false, name: @js($name) }" 
+     x-effect="document.body.style.overflow = show ? 'hidden' : ''" 
+     x-show="show" x-trap="show"
+    @close-modal="show = false" 
+    @open-modal.window="show = ($event.detail === name)" 
+    @keydown.escape.window="show = false"
+    x-transition:enter="ease-out duration-250" 
+    x-transition:enter-start="opacity-0 -translate-y-4"
+    x-transition:enter-end="opacity-100" 
+    x-transition:leave="ease-in duration-250" 
+    x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0 -translate-y-4"
-    class="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/50" style="display:none;"
-    role="dialog" aria-modal="true" aria-labelledby="modal-{{ $name }}-title" :aria-hidden="!show"
-    tabindex="-1" id="modal-{{ $name }}">
-
+    class="backdrop-blur-xs fixed inset-0 z-50 flex items-center justify-center bg-black/50" 
+    style="display:none;"
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="modal-{{ $name }}-title" 
+    :aria-hidden="!show"
+    tabindex="-1" id="modal-{{ $name }}"
+    >
+    
     <x-card is="div" @click.away="show = false" class="max-h-[80vh] w-full max-w-2xl overflow-auto shadow-xl">
         <div class="flex items-center justify-between">
             <h2 id="modal-{{ $name }}-title" class="text-2xl font-bold">{{ $title }}</h2>

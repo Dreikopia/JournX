@@ -7,7 +7,8 @@
             </a>
 
             <div class="flex items-center gap-x-3">
-                <button class="btn btn-outlined">
+                <button x-data @click="$dispatch('open-modal', 'edit-journal')" data-test="edit-journal-button"
+                    class="btn btn-outlined">
                     <x-icons.external />
                     Edit
                 </button>
@@ -70,6 +71,7 @@
                                             </span>
                                         </div>
                                     </form>
+                                    
                                 </x-card>
                             @endforeach
                         </div>
@@ -92,5 +94,6 @@
             @endif
 
         </div>
+        <x-journal.modal :journal="$journal" />
     </div>
 </x-layout.app>

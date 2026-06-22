@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions;
 
 use App\Models\User;
@@ -13,13 +15,13 @@ class CreateJournal
         //
     }
 
-    public function handle(array $attributes)
+    public function handle(array $attributes): void
     {
         $data = collect($attributes)->only([
             'title',
             'description',
             'mood',
-            'links'
+            'links',
         ])->toArray();
 
         // single query to create journal with img already inluded
@@ -31,9 +33,7 @@ class CreateJournal
         DB::transaction(function () use ($data, $attributes) {
             $journal = $this->user->journals()->create($data);
 
-            $tasks = collect($attributes['tasks'] ?? [])->map(fn($task) => ['description' => $task]);
-
-            $journal->tasks()->createMany($tasks);
+            $journal->tasks()->createMany($attributes['tasks'] ?? []);
         });
     }
 }
